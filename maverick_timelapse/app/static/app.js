@@ -1,5 +1,6 @@
 "use strict";
 import { defaultSchedule, scheduledStart } from "./schedule.mjs";
+import { capturePresets, defaultPreset } from "./presets.mjs";
 const form = document.getElementById("job-form");
 const notice = document.getElementById("notice");
 const player = document.getElementById("player");
@@ -32,6 +33,36 @@ function element(tag, className, text) {
 }
 function bytes(value) { return `${(value / 1024 ** 3).toFixed(2)} GB`; }
 function date(value) { return new Date(value * 1000).toLocaleString(); }
+const presetSelect = document.getElementById("capture-preset");
+const presetHelp = document.getElementById("preset-help");
+presetSelect.replaceChildren();
+for (const preset of capturePresets) {
+  presetSelect.add(new Option(`${preset.name} — every ${preset.seconds}s`, preset.id));
+}
+presetSelect.add(new Option("Custom interval", "custom"));
+
+function describePreset() {
+  const preset = capturePresets.find(item => item.id === presetSelect.value);
+  presetHelp.textContent = preset ? preset.description
+    : "Choose any interval from 5 to 86,400 seconds. Shorter intervals capture more movement and use more storage. Choose an interval your camera can reliably refresh.";
+}
+
+function applyPreset() {
+  const preset = capturePresets.find(item => item.id === presetSelect.value);
+  if (preset) form.elements.interval_seconds.value = preset.seconds;
+  describePreset();
+  estimate();
+}
+presetSelect.addEventListener("change", applyPreset);
+form.elements.interval_seconds.addEventListener("input", () => {
+  // A manual edit is custom even when it happens to equal another preset.
+  // Selecting Custom preserves the user's number rather than resetting it.
+  presetSelect.value = "custom";
+  describePreset();
+});
+presetSelect.value = defaultPreset;
+applyPreset();
+
 function estimate() {
   const interval = Number(form.elements.interval_seconds.value);
   const duration = Number(form.elements.duration_minutes.value);
@@ -99,7 +130,7 @@ form.addEventListener("submit", async event => {
     for (const key of ["interval_seconds", "duration_minutes", "fps"]) values[key] = Number(values[key]);
     values.start_at = values.start_mode === "scheduled"
       ? scheduledStart(values.start_date, values.start_time) : null;
-    for (const key of ["start_mode", "start_date", "start_time"]) delete values[key];
+    for (const key of ["start_mode", "start_date", "start_time", "capture_preset"]) delete values[key];
     await api("jobs", { method: "POST", body: JSON.stringify(values) });
     form.elements.name.value = "";
     form.elements.start_mode.value = "now";
@@ -133,6 +164,7 @@ function buildCard(job) {
     progress.setAttribute("aria-label", "Recording progress"); card.append(progress);
   }
   card.append(element("p", "meta", `${job.frames.toLocaleString()} frames · ${(job.frames / job.fps).toFixed(1)}s video · ${job.errors} failed captures`));
+  card.append(element("p", "hint", `One snapshot every ${job.interval_seconds} seconds · Finished video: ${job.fps} FPS`));
   card.append(element("p", "hint", `Start: ${date(job.start_at)} · End: ${date(job.end_at)}`));
   if (job.last_error) card.append(element("p", "error", job.last_error));
   if (job.frames > 0 && job.status !== "completed") {

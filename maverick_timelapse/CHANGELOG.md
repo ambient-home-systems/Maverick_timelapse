@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Add explained capture presets for daytime/nighttime landscapes, stars, clouds, sunrise/sunset, and all-day views.
+- Allow custom intervals without losing the entered value or changing duration/FPS.
+- Show each job's capture interval and document the research, tuning, and astronomy limitations.
+
 ## 0.1.2
 
 - Explain finished video FPS, recommended settings, and how it differs from the snapshot interval and camera FPS.

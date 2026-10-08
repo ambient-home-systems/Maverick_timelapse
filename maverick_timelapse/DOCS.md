@@ -4,6 +4,16 @@ Use **Open Web UI** to create a recording from an existing Home Assistant camera
 
 The app automatically authenticates through Home Assistant Supervisor. No camera passwords or access tokens are needed in its configuration.
 
+## Capture presets
+
+Start with daytime landscape **10s**, quiet nighttime landscape **30s**, stars/astronomy **30s**, clouds/sky **5s**, sunrise/sunset **5s**, or all-day landscape **60s**. These are starting points for different motion speeds, not automatic camera settings.
+
+A preset changes only the snapshot interval. You can edit the number at any time to select Custom; selecting Custom preserves the number. Faster capture preserves more motion and uses more storage. Recording duration, output FPS, and existing jobs are unchanged.
+
+Night and astronomy presets do not change exposure, camera night mode, or image quality. The camera must already show stars in its snapshots. Match the interval to the camera's actual image update cycle; a camera updating once a minute cannot deliver new images every 5 seconds. Very fast clouds and brief astronomical events may need capture methods beyond this app's 5-second minimum.
+
+Research and tuning: https://github.com/ambient-home-systems/Maverick_timelapse/blob/main/docs/capture-intervals.md
+
 ## Finished video FPS
 
 FPS is the number of captured snapshots shown per second in the finished MP4. It does not need to match your camera's video FPS. Choose **30 FPS** as a starting point. With the same snapshots, 24 FPS produces a longer, slower video; 60 FPS produces a shorter, faster video. For example, 900 snapshots make a 30-second video at 30 FPS or a 15-second video at 60 FPS.
