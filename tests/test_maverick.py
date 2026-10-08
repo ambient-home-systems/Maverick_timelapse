@@ -362,6 +362,29 @@ class APITests(unittest.IsolatedAsyncioTestCase):
     async def test_unknown_job_paths_are_not_filesystem_paths(self):
         self.assertEqual((await self.client.get("/api/jobs/not-a-job/snapshot")).status_code, 404)
 
+    async def test_start_now_uses_server_time_and_captures(self):
+        before = time.time()
+        response = await self.client.post("/api/jobs", json={"name": "Now", "camera": "camera.garden", "start_at": None}, headers=HEADERS)
+        self.assertEqual(response.status_code, 201)
+        result = response.json()
+        self.assertGreaterEqual(result["start_at"], before)
+        self.assertLessEqual(result["start_at"], time.time())
+        self.assertEqual(result["end_at"] - result["start_at"], 3600)
+        engine = self.application.state.engine
+        await engine.tick()
+        await asyncio.gather(*list(engine.tasks.values()))
+        self.assertEqual(engine.jobs[result["id"]].frames, 1)
+
+    async def test_future_start_preserves_browser_timezone_and_waits(self):
+        start = datetime.now(timezone(timedelta(hours=-4))) + timedelta(hours=1)
+        response = await self.client.post("/api/jobs", json={"name": "Later", "camera": "camera.garden", "start_at": start.isoformat()}, headers=HEADERS)
+        self.assertEqual(response.status_code, 201)
+        result = response.json()
+        self.assertAlmostEqual(result["start_at"], start.timestamp())
+        engine = self.application.state.engine
+        await engine.tick()
+        self.assertEqual(engine.camera.calls, 0)
+
     async def test_production_only_accepts_supervisor_ingress_and_local_health(self):
         app = create_app(Path(self.temporary.name), FakeCamera(), development=False)
         # Use the running test engine while exercising the production request boundary.

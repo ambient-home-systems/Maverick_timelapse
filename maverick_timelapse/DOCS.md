@@ -1,6 +1,6 @@
 # Maverick Timelapse
 
-Use **Open Web UI** to create a recording from an existing Home Assistant camera entity. Choose a snapshot interval, duration, and optional future start time. The start-time picker uses your browser’s timezone.
+Use **Open Web UI** to create a recording from an existing Home Assistant camera entity. Choose a snapshot interval and duration, then select **Start now** (the default) or **Schedule for later**. Scheduled recordings use separate date and time controls; your browser’s timezone is shown below them.
 
 The app automatically authenticates through Home Assistant Supervisor. No camera passwords or access tokens are needed in its configuration.
 

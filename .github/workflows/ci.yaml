@@ -22,6 +22,7 @@ jobs:
         env:
           PYTHONPATH: maverick_timelapse
       - run: node --check maverick_timelapse/app/static/app.js
+      - run: TZ=America/New_York node --test tests/test_schedule.mjs
   image:
     runs-on: ubuntu-latest
     strategy:
@@ -40,6 +41,6 @@ jobs:
           context: maverick_timelapse
           platforms: ${{ matrix.platform }}
           build-args: |
-            BUILD_VERSION=0.1.0
+            BUILD_VERSION=0.1.1
             BUILD_ARCH=${{ matrix.arch }}
           push: false

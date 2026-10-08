@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Add an explicit Start now option, selected by default.
+- Replace the combined start-time picker with separate date and time controls for browser compatibility.
+- Show the scheduling timezone and actionable errors for incomplete, past, and nonexistent times.
+- Correct the README button for adding the repository to Home Assistant.
+
 ## 0.1.0
 
 - Initial Home Assistant OS app for scheduled camera timelapses.

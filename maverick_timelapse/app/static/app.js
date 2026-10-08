@@ -1,4 +1,5 @@
 "use strict";
+import { defaultSchedule, scheduledStart } from "./schedule.mjs";
 const form = document.getElementById("job-form");
 const notice = document.getElementById("notice");
 const player = document.getElementById("player");
@@ -41,6 +42,32 @@ function estimate() {
 form.addEventListener("input", estimate);
 estimate();
 
+function updateStartMode() {
+  const scheduled = form.elements.start_mode.value === "scheduled";
+  document.getElementById("scheduled-start").hidden = !scheduled;
+  document.getElementById("start-help").textContent = scheduled
+    ? "Recording begins at the date and time you choose below."
+    : "Start now begins recording as soon as you create the timelapse.";
+  for (const input of [form.elements.start_date, form.elements.start_time]) {
+    input.disabled = !scheduled;
+    input.setCustomValidity("");
+  }
+  if (scheduled && !form.elements.start_date.value && !form.elements.start_time.value) {
+    const suggested = defaultSchedule();
+    form.elements.start_date.value = suggested.date;
+    form.elements.start_time.value = suggested.time;
+  }
+}
+document.getElementById("start-mode").addEventListener("change", updateStartMode);
+document.getElementById("start-timezone").textContent = `Choose a future time. Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}.`;
+for (const input of [form.elements.start_date, form.elements.start_time]) {
+  input.addEventListener("invalid", () => {
+    input.setCustomValidity("Choose a complete date and time, or select Start now.");
+  });
+  input.addEventListener("input", () => input.setCustomValidity(""));
+}
+updateStartMode();
+
 async function loadCameras() {
   const refreshButton = document.getElementById("refresh-cameras");
   refreshButton.disabled = true;
@@ -70,10 +97,15 @@ form.addEventListener("submit", async event => {
   try {
     const values = Object.fromEntries(new FormData(form));
     for (const key of ["interval_seconds", "duration_minutes", "fps"]) values[key] = Number(values[key]);
-    values.start_at = values.start_at ? new Date(values.start_at).toISOString() : null;
+    values.start_at = values.start_mode === "scheduled"
+      ? scheduledStart(values.start_date, values.start_time) : null;
+    for (const key of ["start_mode", "start_date", "start_time"]) delete values[key];
     await api("jobs", { method: "POST", body: JSON.stringify(values) });
     form.elements.name.value = "";
-    form.elements.start_at.value = "";
+    form.elements.start_mode.value = "now";
+    form.elements.start_date.value = "";
+    form.elements.start_time.value = "";
+    updateStartMode();
     await refreshJobs();
   } catch (error) { showError(error.message); }
   finally { button.disabled = false; }
