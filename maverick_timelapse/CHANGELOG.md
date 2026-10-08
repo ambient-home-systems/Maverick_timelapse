@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+- Build and publish versioned amd64/aarch64 container images in GitHub Actions, with native architecture checks and a combined manifest.
+- Cache dependency layers and keep version labels after dependency installation.
+- Check anonymous registry access before switching Home Assistant to prebuilt images.
+
 ## 0.1.3
 
 - Add explained capture presets for daytime/nighttime landscapes, stars, clouds, sunrise/sunset, and all-day views.

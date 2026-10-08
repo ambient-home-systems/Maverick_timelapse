@@ -1,0 +1,52 @@
+name: App tests
+on:
+  workflow_call:
+    outputs:
+      version:
+        value: ${{ jobs.tests.outputs.version }}
+      image:
+        value: ${{ jobs.tests.outputs.image }}
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.metadata.outputs.version }}
+      image: ${{ steps.metadata.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python -m pip install -r requirements-dev.txt
+      - id: metadata
+        name: Read and validate release version
+        run: |
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+          import yaml
+          config = yaml.safe_load(Path("maverick_timelapse/config.yaml").read_text())
+          version = config["version"]
+          if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+              raise SystemExit("Use a numeric major.minor.patch app version.")
+          ref = os.environ["GITHUB_REF"]
+          if ref.startswith("refs/tags/") and ref != f"refs/tags/v{version}":
+              raise SystemExit("Release tag must match the config.yaml version.")
+          image = "ghcr.io/" + os.environ["GITHUB_REPOSITORY_OWNER"].lower() + "/maverick_timelapse"
+          if config.get("image", image) != image:
+              raise SystemExit("App image must match the registry publication target.")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"version={version}\nimage={image}\n")
+          PY
+      - run: python -m unittest discover -s tests -v
+        env:
+          PYTHONPATH: maverick_timelapse
+      - run: node --check maverick_timelapse/app/static/app.js
+      - run: TZ=America/New_York node --test tests/test_schedule.mjs
