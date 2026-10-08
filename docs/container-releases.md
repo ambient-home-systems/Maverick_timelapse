@@ -13,7 +13,7 @@ Home Assistant uses the exact `config.yaml` version as the image tag. It does no
 ## First publication
 
 1. Push a `v0.1.4` tag on the commit with version `0.1.4`, or run **Actions → Publish app images → Run workflow** on that commit.
-2. After the package first appears, open [the organization's packages](https://github.com/orgs/ambient-home-systems/packages), choose **maverick_timelapse**, and open **Package settings → Change visibility → Public**. GitHub creates new container packages as private even for a public source repository. Organization policy must permit public packages and Actions package publication.
+2. After the package first appears, open [the account's packages](https://github.com/ambient-home-systems?tab=packages), choose **maverick_timelapse**, and open **Package settings → Change visibility → Public**. GitHub creates new container packages as private even for a public source repository. Account policy must permit public packages and Actions package publication.
 3. Wait for the release workflow to succeed. If its final anonymous-download check ran before the package was made public, rerun the failed job. The check fetches the version manifest without repository credentials and requires both supported architectures.
 4. After that check succeeds, set this in `maverick_timelapse/config.yaml` and push it to `main`:
 
