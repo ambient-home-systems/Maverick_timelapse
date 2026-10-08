@@ -1,0 +1,24 @@
+name: Maverick Timelapse
+version: "0.1.0"
+slug: maverick_timelapse
+description: Capture scheduled snapshots from Home Assistant cameras and create timelapse videos.
+url: https://github.com/ambient-home-systems/Maverick_timelapse
+arch:
+  - aarch64
+  - amd64
+startup: application
+boot: auto
+stage: experimental
+backup: cold
+homeassistant_api: true
+ingress: true
+ingress_port: 8099
+ingress_stream: true
+panel_icon: mdi:movie-open
+panel_title: Maverick Timelapse
+options:
+  max_storage_gb: 10
+  keep_snapshots: false
+schema:
+  max_storage_gb: int(1,1000)
+  keep_snapshots: bool

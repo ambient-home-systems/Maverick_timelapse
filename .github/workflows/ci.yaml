@@ -1,0 +1,45 @@
+name: Validate app
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m unittest discover -s tests -v
+        env:
+          PYTHONPATH: maverick_timelapse
+      - run: node --check maverick_timelapse/app/static/app.js
+  image:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+          - platform: linux/arm64
+            arch: aarch64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: maverick_timelapse
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            BUILD_VERSION=0.1.0
+            BUILD_ARCH=${{ matrix.arch }}
+          push: false

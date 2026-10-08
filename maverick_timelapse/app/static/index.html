@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Maverick Timelapse</title>
+  <link rel="stylesheet" href="./static/style.css">
+  <script src="./static/app.js" defer></script>
+</head>
+<body>
+  <header><div><p class="eyebrow">AMBIENT HOME SYSTEMS</p><h1>Maverick Timelapse</h1><p>Turn a day of camera snapshots into a moment worth keeping.</p></div><span class="badge">0.1.0</span></header>
+  <main>
+    <div id="notice" role="alert" hidden></div>
+    <section class="create-panel" aria-labelledby="create-title">
+      <h2 id="create-title">Create a timelapse</h2>
+      <form id="job-form">
+        <label>Name<input name="name" required maxlength="100" placeholder="Garden afternoon"></label>
+        <label>Camera<select name="camera" id="camera" required><option value="">Loading cameras…</option></select></label>
+        <label>Snapshot every (seconds)<input name="interval_seconds" type="number" min="5" max="86400" value="30" required></label>
+        <label>Record for (minutes)<input name="duration_minutes" type="number" min="1" max="43200" value="60" required></label>
+        <label>Video frame rate<select name="fps"><option value="24">24 fps</option><option value="30" selected>30 fps</option><option value="60">60 fps</option></select></label>
+        <label>Start time<input name="start_at" type="datetime-local"><span class="hint">Leave empty to start now. Times use your browser’s timezone.</span></label>
+        <p id="estimate" class="hint full"></p>
+        <div class="form-actions full"><button type="submit" id="create-button" disabled>Create timelapse</button><button type="button" class="secondary" id="refresh-cameras">Refresh cameras</button></div>
+      </form>
+    </section>
+    <section aria-labelledby="jobs-title">
+      <div class="section-heading"><h2 id="jobs-title">Your timelapses</h2><span id="storage" class="hint"></span></div>
+      <p id="empty" class="empty">Your recordings and completed videos will appear here.</p>
+      <div id="jobs" class="jobs"></div>
+    </section>
+    <p class="footnote">Snapshots depend on your camera’s availability and refresh rate. Check the latest image to confirm that your camera provides fresh frames.</p>
+  </main>
+  <dialog id="player"><div class="section-heading"><h2 id="player-title">Timelapse</h2><button type="button" class="secondary" id="close-player">Close</button></div><video controls playsinline preload="metadata"></video></dialog>
+</body>
+</html>

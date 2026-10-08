@@ -1,0 +1,2 @@
+-r maverick_timelapse/requirements.txt
+PyYAML==6.0.3
