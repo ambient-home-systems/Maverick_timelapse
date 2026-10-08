@@ -1,5 +1,5 @@
 name: Maverick Timelapse
-version: "0.1.1"
+version: "0.1.2"
 slug: maverick_timelapse
 description: Capture scheduled snapshots from Home Assistant cameras and create timelapse videos.
 url: https://github.com/ambient-home-systems/Maverick_timelapse

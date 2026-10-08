@@ -37,7 +37,7 @@ function estimate() {
   const duration = Number(form.elements.duration_minutes.value);
   const fps = Number(form.elements.fps.value);
   document.getElementById("estimate").textContent = interval > 0 && duration > 0
-    ? `About ${Math.ceil(duration * 60 / interval).toLocaleString()} snapshots → ${(Math.ceil(duration * 60 / interval) / fps).toFixed(1)} seconds of video. Missed captures shorten the video.` : "";
+    ? `About ${Math.ceil(duration * 60 / interval).toLocaleString()} snapshots → ${(Math.ceil(duration * 60 / interval) / fps).toFixed(1)} seconds of finished video at ${fps} FPS. Missed captures shorten the video.` : "";
 }
 form.addEventListener("input", estimate);
 estimate();

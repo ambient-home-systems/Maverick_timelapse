@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Explain finished video FPS, recommended settings, and how it differs from the snapshot interval and camera FPS.
+- Include the selected output FPS in the finished-video duration estimate.
+
 ## 0.1.1
 
 - Add an explicit Start now option, selected by default.

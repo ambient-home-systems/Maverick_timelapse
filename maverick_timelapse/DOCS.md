@@ -4,6 +4,12 @@ Use **Open Web UI** to create a recording from an existing Home Assistant camera
 
 The app automatically authenticates through Home Assistant Supervisor. No camera passwords or access tokens are needed in its configuration.
 
+## Finished video FPS
+
+FPS is the number of captured snapshots shown per second in the finished MP4. It does not need to match your camera's video FPS. Choose **30 FPS** as a starting point. With the same snapshots, 24 FPS produces a longer, slower video; 60 FPS produces a shorter, faster video. For example, 900 snapshots make a 30-second video at 30 FPS or a 15-second video at 60 FPS.
+
+The snapshot interval controls how often images are captured. Changing finished video FPS does not capture more images or increase their resolution. The form estimates the finished duration as you change these settings.
+
 ## Options
 
 - **max_storage_gb** (default 10): total storage budget in GiB. This must leave room for both snapshots and rendered videos. Delete older completed or failed jobs when the limit is reached. No automatic deletion occurs.

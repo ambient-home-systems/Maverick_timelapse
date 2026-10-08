@@ -9,7 +9,7 @@
   <script type="module" src="./static/app.js"></script>
 </head>
 <body>
-  <header><div><p class="eyebrow">AMBIENT HOME SYSTEMS</p><h1>Maverick Timelapse</h1><p>Turn a day of camera snapshots into a moment worth keeping.</p></div><span class="badge">0.1.1</span></header>
+  <header><div><p class="eyebrow">AMBIENT HOME SYSTEMS</p><h1>Maverick Timelapse</h1><p>Turn a day of camera snapshots into a moment worth keeping.</p></div><span class="badge">0.1.2</span></header>
   <main>
     <div id="notice" role="alert" hidden></div>
     <section class="create-panel" aria-labelledby="create-title">
@@ -17,9 +17,9 @@
       <form id="job-form">
         <label>Name<input name="name" required maxlength="100" placeholder="Garden afternoon"></label>
         <label>Camera<select name="camera" id="camera" required><option value="">Loading cameras…</option></select></label>
-        <label>Snapshot every (seconds)<input name="interval_seconds" type="number" min="5" max="86400" value="30" required></label>
+        <label>Snapshot every (seconds)<input name="interval_seconds" type="number" min="5" max="86400" value="30" required aria-describedby="interval-help"><span id="interval-help" class="hint">How often to capture a still image. This sets how much detail you capture over time.</span></label>
         <label>Record for (minutes)<input name="duration_minutes" type="number" min="1" max="43200" value="60" required></label>
-        <label>Video frame rate<select name="fps"><option value="24">24 fps</option><option value="30" selected>30 fps</option><option value="60">60 fps</option></select></label>
+        <label>Finished video FPS<select name="fps" aria-describedby="fps-help"><option value="24">24 FPS — slower playback</option><option value="30" selected>30 FPS — recommended</option><option value="60">60 FPS — faster playback</option></select><span id="fps-help" class="hint">Snapshots shown per second in the finished MP4. No need to match your camera’s FPS. Higher FPS plays the same snapshots faster, making a shorter video. 30 FPS is a good default.</span></label>
         <label>Start<select name="start_mode" id="start-mode"><option value="now" selected>Start now</option><option value="scheduled">Schedule for later</option></select><span id="start-help" class="hint">Start now begins recording as soon as you create the timelapse.</span></label>
         <fieldset id="scheduled-start" class="full scheduled-fields" hidden>
           <legend>Scheduled start</legend>
