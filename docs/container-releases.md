@@ -2,7 +2,7 @@
 
 GitHub Actions builds Maverick on native **amd64** and **arm64** runners and publishes images to **GitHub Container Registry (GHCR)**. The Home Assistant `aarch64` architecture uses the `arm64` image. There is no Docker Hub account or extra registry token to configure: publication uses the workflow's built-in `GITHUB_TOKEN`, with `packages: write` restricted to publishing jobs.
 
-The release workflow runs app tests first, builds both images, checks their version/architecture labels, and renders a small H.264 video inside each published container. Only after both checks pass does it publish the combined version manifest. Version 0.1.4 is publicly available and `config.yaml` is configured to download it:
+The release workflow runs app tests first, builds both images, checks their version/architecture labels, and renders a small H.264 video inside each published container. Only after both checks pass does it publish the combined version manifest. Version 0.1.4 introduced publicly downloadable images. `config.yaml` selects the released version:
 
 ```text
 ghcr.io/ambient-home-systems/maverick_timelapse:0.1.4

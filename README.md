@@ -2,7 +2,7 @@
 
 Create timelapse videos from cameras already integrated into Home Assistant. Choose a camera, snapshot interval, recording duration, and start time. Maverick captures snapshots and turns them into a downloadable MP4.
 
-**For Home Assistant OS.** This repository is a custom app repository (formerly called an add-on repository). Version 0.1.4 is an early release; test a short recording on your camera before scheduling a long one.
+**For Home Assistant OS.** This repository is a custom app repository (formerly called an add-on repository). Version 0.1.5 is an early release; test a short recording on your camera before scheduling a long one.
 
 [![Click here to add to Home Assistant](https://img.shields.io/badge/Click%20here%20to%20add%20to-Home%20Assistant-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fambient-home-systems%2FMaverick_timelapse)
 
@@ -24,9 +24,9 @@ Supported architectures: **amd64** and **aarch64**. A 64-bit Raspberry Pi OS ins
 ## Make your first timelapse
 
 1. Confirm that your camera shows an image in Home Assistant. For Reolink, add the camera through Home Assistant’s Reolink integration first.
-2. Open Maverick, name the recording, and choose a camera.
+2. Open Maverick and select **New timelapse**. Name the recording and choose a camera.
 3. Choose a **Capture preset** or enter a custom snapshot interval, then set the recording duration. Choose **Start now** (the default) to begin immediately, or **Schedule for later** and select a future date and time. The timezone is shown below the date and time controls.
-4. Select **Create timelapse**. Check the latest snapshot and failed-capture count while recording.
+4. Select **Start recording** or **Schedule recording**. The setup panel closes and the recording appears in the library. Use **In progress** and **Videos** to filter the library. Check the latest snapshot and expand **Recording details** to see capture errors and timing.
 5. When the recording ends, Maverick renders the video. Select **Watch** or **Download MP4** when it completes. **Finish video now** ends a recording early and renders the frames already captured.
 
 Example: one snapshot every **30 seconds** over **8 hours**, played at **30 fps**, produces approximately **960 frames** and a **32-second video**. Missed captures reduce the frame count and video duration.
@@ -66,6 +66,8 @@ The snapshot interval controls how often pictures are captured. FPS controls how
 
 ## Features
 
+- Material-style recordings library with camera/video previews, status filters, and automatic light/dark appearance.
+- Focused New timelapse panel with mobile layout and keyboard navigation.
 - Camera discovery through Home Assistant, without separate camera credentials.
 - Scene presets for capture intervals, with explanations and editable custom values.
 - Immediate or future, one-time recordings, with up to eight active jobs.
@@ -119,10 +121,10 @@ python3 -m venv .venv
 PYTHONPATH=maverick_timelapse .venv/bin/python -m unittest discover -s tests -v
 node --check maverick_timelapse/app/static/app.js
 TZ=America/New_York node --test tests/test_schedule.mjs
-docker build -t maverick-timelapse:0.1.4 maverick_timelapse
+docker build -t maverick-timelapse:0.1.5 maverick_timelapse
 ```
 
-The Dockerfile pins a multi-architecture base-image digest and includes the app labels required by current Supervisor versions. For networks using a trusted TLS inspection proxy, an optional build-only CA bundle can be supplied with `docker build --secret id=build_ca,src=/path/to/trusted-ca-bundle.pem -t maverick-timelapse:0.1.4 maverick_timelapse`. Certificate verification remains enabled; the bundle is not stored in the image.
+The Dockerfile pins a multi-architecture base-image digest and includes the app labels required by current Supervisor versions. For networks using a trusted TLS inspection proxy, an optional build-only CA bundle can be supplied with `docker build --secret id=build_ca,src=/path/to/trusted-ca-bundle.pem -t maverick-timelapse:0.1.5 maverick_timelapse`. Certificate verification remains enabled; the bundle is not stored in the image.
 
 For local development against a Home Assistant instance, set `HA_API_URL` to its API base (for example, `http://homeassistant.local:8123/api`) and supply a long-lived access token as `HA_TOKEN` through your local environment. Never commit or print tokens. The production app uses `SUPERVISOR_TOKEN` automatically.
 

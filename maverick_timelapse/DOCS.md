@@ -2,7 +2,9 @@
 
 Version 0.1.4 and later download prebuilt containers from GitHub Container Registry for amd64 and aarch64. Updates preserve existing jobs and videos. Home Assistant may briefly show 0% while downloading or extracting layers; check the Supervisor logs for progress.
 
-Use **Open Web UI** to create a recording from an existing Home Assistant camera entity. Choose a snapshot interval and duration, then select **Start now** (the default) or **Schedule for later**. Scheduled recordings use separate date and time controls; your browser’s timezone is shown below them.
+Use **Open Web UI**, then select **New timelapse**. Choose an existing Home Assistant camera, a snapshot interval, and a duration. Select **Start now** (the default) or **Schedule for later**, then press **Start recording** or **Schedule recording**. Scheduled recordings use separate date and time controls; your browser’s timezone is shown below them.
+
+The library shows recordings and finished videos, with **All**, **In progress**, and **Videos** filters. Expand **Recording details** for timing and capture errors. The setup panel fills the screen on phones, and the interface follows your device's light/dark appearance.
 
 The app automatically authenticates through Home Assistant Supervisor. No camera passwords or access tokens are needed in its configuration.
 

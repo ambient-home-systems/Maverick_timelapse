@@ -3,47 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f8f9fc">
   <title>Maverick Timelapse</title>
   <link rel="stylesheet" href="./static/style.css">
   <script type="module" src="./static/app.js"></script>
 </head>
 <body>
-  <header><div><p class="eyebrow">AMBIENT HOME SYSTEMS</p><h1>Maverick Timelapse</h1><p>Turn a day of camera snapshots into a moment worth keeping.</p></div><span class="badge">0.1.4</span></header>
+  <header class="app-bar">
+    <div class="app-identity">
+      <svg class="app-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="5" width="26" height="22" rx="5" stroke="currentColor" stroke-width="2"/><path d="M9 5v22M23 5v22M3 12h6m-6 8h6m14-8h6m-6 8h6" stroke="currentColor" stroke-width="2"/><path d="m14 12 6 4-6 4z" fill="currentColor"/></svg>
+      <span class="app-name">Maverick Timelapse</span>
+    </div>
+    <span class="version" aria-label="Version 0.1.5">v0.1.5</span>
+  </header>
   <main>
-    <div id="notice" role="alert" hidden></div>
-    <section class="create-panel" aria-labelledby="create-title">
-      <h2 id="create-title">Create a timelapse</h2>
-      <form id="job-form">
-        <fieldset class="full preset-fields">
-          <legend>Capture preset</legend>
-          <label>Scene<select name="capture_preset" id="capture-preset" aria-describedby="preset-help"><option value="">Loading presets…</option></select></label>
-          <p id="preset-help" class="hint" aria-live="polite"></p>
-          <p class="hint">These are starting points, not automatic camera settings. Presets change only the snapshot interval; you can edit it anytime.</p>
-        </fieldset>
-        <label>Name<input name="name" required maxlength="100" placeholder="Garden afternoon"></label>
-        <label>Camera<select name="camera" id="camera" required><option value="">Loading cameras…</option></select></label>
-        <label>Snapshot every (seconds)<input name="interval_seconds" type="number" min="5" max="86400" value="10" required aria-describedby="interval-help"><span id="interval-help" class="hint">How often to capture a still image. Edit this number for a custom interval.</span></label>
-        <label>Record for (minutes)<input name="duration_minutes" type="number" min="1" max="43200" value="60" required></label>
-        <label>Finished video FPS<select name="fps" aria-describedby="fps-help"><option value="24">24 FPS — slower playback</option><option value="30" selected>30 FPS — recommended</option><option value="60">60 FPS — faster playback</option></select><span id="fps-help" class="hint">Snapshots shown per second in the finished MP4. No need to match your camera’s FPS. Higher FPS plays the same snapshots faster, making a shorter video. 30 FPS is a good default.</span></label>
-        <label>Start<select name="start_mode" id="start-mode"><option value="now" selected>Start now</option><option value="scheduled">Schedule for later</option></select><span id="start-help" class="hint">Start now begins recording as soon as you create the timelapse.</span></label>
-        <fieldset id="scheduled-start" class="full scheduled-fields" hidden>
-          <legend>Scheduled start</legend>
-          <label>Date<input name="start_date" type="date" required disabled></label>
-          <label>Time<input name="start_time" type="time" step="60" required disabled></label>
-          <p id="start-timezone" class="hint full">Choose a future time in your browser’s timezone.</p>
-        </fieldset>
-        <p id="estimate" class="hint full"></p>
-        <div class="form-actions full"><button type="submit" id="create-button" disabled>Create timelapse</button><button type="button" class="secondary" id="refresh-cameras">Refresh cameras</button></div>
-      </form>
+    <div id="notice" class="notice" role="alert" hidden></div>
+    <section class="library" aria-labelledby="jobs-title">
+      <div class="library-heading">
+        <div><h1 id="jobs-title">Timelapses</h1><p id="library-summary" class="supporting">Recordings and finished videos</p></div>
+        <button type="button" class="new-recording" id="new-recording"><span class="plus" aria-hidden="true">+</span>New timelapse</button>
+      </div>
+      <div class="library-toolbar">
+        <div class="filters" role="group" aria-label="Filter timelapses">
+          <button type="button" class="filter" data-filter="all" aria-pressed="true">All <span id="count-all">0</span></button>
+          <button type="button" class="filter" data-filter="active" aria-pressed="false">In progress <span id="count-active">0</span></button>
+          <button type="button" class="filter" data-filter="completed" aria-pressed="false">Videos <span id="count-completed">0</span></button>
+        </div>
+        <span class="sort-label">Newest first</span>
+      </div>
+      <div id="empty" class="empty" hidden>
+        <svg class="empty-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="8" y="9" width="32" height="30" rx="4" stroke="currentColor" stroke-width="2"/><path d="M15 9v30m18-30v30M8 18h7m-7 12h7m18-12h7m-7 12h7" stroke="currentColor" stroke-width="2"/><path d="m21 19 8 5-8 5z" fill="currentColor"/></svg>
+        <h2 id="empty-title">No timelapses yet</h2>
+        <p id="empty-description">Create a recording from a Home Assistant camera.</p>
+        <button type="button" class="text-button" id="empty-create">Create a timelapse</button>
+      </div>
+      <div id="jobs" class="jobs" aria-busy="true"></div>
+      <div class="storage-panel">
+        <div class="storage-heading"><span>Storage</span><span id="storage">Loading…</span></div>
+        <meter id="storage-meter" min="0" max="1" value="0" aria-label="Storage used"></meter>
+        <p>Download videos before deleting them to free up space.</p>
+      </div>
     </section>
-    <section aria-labelledby="jobs-title">
-      <div class="section-heading"><h2 id="jobs-title">Your timelapses</h2><span id="storage" class="hint"></span></div>
-      <p id="empty" class="empty">Your recordings and completed videos will appear here.</p>
-      <div id="jobs" class="jobs"></div>
-    </section>
-    <p class="footnote">Snapshots depend on your camera’s availability and refresh rate. Check the latest image to confirm that your camera provides fresh frames.</p>
+    <footer class="app-footer"><span>Ambient Home Systems</span><span>Home Assistant cameras</span></footer>
   </main>
-  <dialog id="player"><div class="section-heading"><h2 id="player-title">Timelapse</h2><button type="button" class="secondary" id="close-player">Close</button></div><video controls playsinline preload="metadata"></video></dialog>
+  <dialog id="composer" class="composer" aria-labelledby="create-title">
+    <div class="dialog-heading"><h2 id="create-title">New timelapse</h2><button type="button" class="icon-button" id="close-composer" aria-label="Close new timelapse"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div>
+    <form id="job-form">
+      <div class="form-body">
+        <div id="form-notice" class="notice" role="alert" hidden></div>
+        <section class="form-section" aria-labelledby="source-title">
+          <h3 id="source-title">Recording</h3>
+          <label>Name<input name="name" required maxlength="100" placeholder="e.g. Garden afternoon" autocomplete="off"></label>
+          <div class="field-heading"><label for="camera">Camera</label><button type="button" class="text-button small" id="refresh-cameras">Refresh</button></div>
+          <select name="camera" id="camera" required aria-describedby="camera-help"><option value="">Loading cameras…</option></select>
+          <p id="camera-help" class="hint">Choose a camera already connected to Home Assistant.</p>
+        </section>
+        <section class="form-section" aria-labelledby="capture-title">
+          <h3 id="capture-title">Capture</h3>
+          <label>Scene<select name="capture_preset" id="capture-preset" aria-describedby="preset-summary"><option value="">Loading presets…</option></select></label>
+          <p id="preset-summary" class="hint"></p>
+          <div class="field-row">
+            <label>Interval <span class="input-unit"><input name="interval_seconds" type="number" min="5" max="86400" value="10" required aria-label="Snapshot interval in seconds" aria-describedby="interval-help"><span aria-hidden="true">sec</span></span></label>
+            <label>Duration <span class="input-unit"><input name="duration_minutes" type="number" min="1" max="43200" value="60" required aria-label="Recording duration in minutes"><span aria-hidden="true">min</span></span></label>
+          </div>
+          <p id="interval-help" class="hint">Time between snapshots. Edit the interval for a custom setting.</p>
+          <details class="setting-help"><summary>Preset guidance</summary><p id="preset-help" class="hint"></p><p class="hint">Presets change only the interval. Night presets do not change the camera’s exposure or image quality.</p></details>
+        </section>
+        <section class="form-section" aria-labelledby="schedule-title">
+          <h3 id="schedule-title">Start</h3>
+          <label class="sr-only" for="start-mode">Start time</label>
+          <select name="start_mode" id="start-mode" aria-describedby="start-help"><option value="now" selected>Start now</option><option value="scheduled">Schedule for later</option></select>
+          <p id="start-help" class="hint">Recording begins when you press Start recording.</p>
+          <fieldset id="scheduled-start" class="scheduled-fields" hidden>
+            <legend class="sr-only">Scheduled start</legend>
+            <div class="field-row"><label>Date<input name="start_date" type="date" required disabled></label><label>Time<input name="start_time" type="time" step="60" required disabled></label></div>
+            <p id="start-timezone" class="hint">Choose a future time in your browser’s timezone.</p>
+          </fieldset>
+        </section>
+        <section class="form-section" aria-labelledby="video-title">
+          <h3 id="video-title">Finished video</h3>
+          <label>Playback frame rate<select name="fps" aria-describedby="fps-help"><option value="24">24 FPS · slower playback</option><option value="30" selected>30 FPS · recommended</option><option value="60">60 FPS · faster playback</option></select></label>
+          <p id="fps-help" class="hint">Frames per second in the finished MP4. This does not need to match your camera’s FPS.</p>
+          <details class="setting-help"><summary>How playback speed works</summary><p class="hint">Each snapshot becomes one video frame. Higher FPS plays the same snapshots faster and makes a shorter video. It does not capture more images or change resolution.</p></details>
+          <div class="estimate-panel"><span class="estimate-label">Estimated output</span><p id="estimate" aria-live="polite"></p><span class="hint">1080p MP4 · Missed captures shorten the video.</span></div>
+        </section>
+      </div>
+      <div class="form-actions"><button type="button" class="text-button" id="cancel-composer">Cancel</button><button type="submit" id="create-button" disabled>Start recording</button></div>
+    </form>
+  </dialog>
+  <dialog id="player" class="player" aria-labelledby="player-title"><div class="dialog-heading"><h2 id="player-title">Timelapse</h2><button type="button" class="icon-button" id="close-player" aria-label="Close video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><video controls playsinline preload="metadata"></video></dialog>
 </body>
 </html>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.5
+
+- Redesign the interface with Material-style controls, a compact toolbar, and automatic light/dark appearance.
+- Make the timelapse library the main screen, with recording/video filters and camera/video previews.
+- Move creation into a focused side panel that fills the screen on phones.
+- Keep setting guidance available beside presets and FPS controls, and show form errors within the panel.
+- Show friendly camera names, preserve expanded recording details, and update recording progress between captures.
+
 ## 0.1.4
 
 - Build and publish versioned amd64/aarch64 container images in GitHub Actions, with native architecture checks and a combined manifest.
