@@ -131,10 +131,10 @@ meter::-moz-meter-bar { background: var(--primary); }
 dialog { color: var(--text); background: var(--surface); border: none; padding: 0; box-shadow: var(--shadow); }
 dialog::backdrop { background: #0005; }
 .dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
-.composer { width: 640px; height: min(900px, calc(100dvh - 48px)); max-width: calc(100vw - 48px); max-height: none; margin: auto; border-radius: 16px; }
+.composer { width: 980px; height: fit-content; max-width: calc(100vw - 48px); max-height: calc(100dvh - 48px); margin: auto; border-radius: 16px; }
 .composer[open] { display: flex; flex-direction: column; }
-#job-form { display: flex; flex-direction: column; min-height: 0; flex: 1; }
-.form-body { overflow-y: auto; overscroll-behavior: contain; padding: 0 24px; flex: 1; scrollbar-gutter: stable; }
+#job-form { display: flex; flex-direction: column; min-height: 0; flex: 0 1 auto; }
+.form-body { overflow-y: auto; overscroll-behavior: contain; padding: 0 24px; flex: 0 1 auto; scrollbar-gutter: stable; }
 .form-section { padding: 22px 0; border-bottom: 1px solid var(--line); }
 .form-section:last-child { border: 0; }
 .form-section h3 { font-weight: 600; font-size: 14px; margin-bottom: 16px; }
@@ -178,7 +178,8 @@ input::-webkit-inner-spin-button, input::-webkit-outer-spin-button { -webkit-app
   .filter { padding: 8px 10px; }
   .jobs { grid-template-columns: 1fr; gap: 16px; }
   .storage-panel { max-width: none; }
-  .composer { width: 100%; max-width: none; height: 100dvh; margin: 0; border-radius: 0; }
+  .composer { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; border-radius: 0; }
+  #job-form, .form-body { flex: 1; }
   .form-body { padding: 0 20px; }
   .form-actions { padding: 16px 20px max(16px, env(safe-area-inset-bottom)); }
   .player { width: calc(100vw - 24px); }
@@ -193,3 +194,13 @@ input::-webkit-inner-spin-button, input::-webkit-outer-spin-button { -webkit-app
 }
 .preview img, .preview video { position: absolute; inset: 0; opacity: 0; }
 .preview img.loaded, .preview video.loaded { opacity: 1; }
+@media (min-width: 860px) {
+  .composer .dialog-heading { padding: 12px 20px; }
+  .form-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; align-content: start; }
+  #form-notice { grid-column: 1 / -1; margin-top: 16px; }
+  .form-section { padding: 12px 0; }
+  .form-section h3 { margin-bottom: 8px; }
+  .form-section[aria-labelledby="schedule-title"], .form-section[aria-labelledby="video-title"] { border-bottom: 0; }
+  .estimate-panel { margin-top: 12px; }
+  .composer .form-actions { padding: 12px 24px; }
+}

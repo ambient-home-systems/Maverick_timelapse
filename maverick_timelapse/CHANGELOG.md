@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.8
+
+- Widen the centered New timelapse dialog to 980px and arrange settings in two columns on desktop.
+- Size the dialog to its contents so the standard desktop form fits without scrolling, including scheduled start controls.
+- Preserve a single-column layout on smaller screens and scrolling for limited height or expanded guidance.
+
 ## 0.1.7
 
 - Use release-specific URLs for styles, JavaScript, and imported modules so cached assets from earlier versions do not retain the old dialog layout.

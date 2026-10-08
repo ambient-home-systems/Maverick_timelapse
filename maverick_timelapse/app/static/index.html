@@ -67,7 +67,7 @@
             <label>Interval <span class="input-unit"><input name="interval_seconds" type="number" min="5" max="86400" value="10" required aria-label="Snapshot interval in seconds" aria-describedby="interval-help"><span aria-hidden="true">sec</span></span></label>
             <label>Duration <span class="input-unit"><input name="duration_minutes" type="number" min="1" max="43200" value="60" required aria-label="Recording duration in minutes"><span aria-hidden="true">min</span></span></label>
           </div>
-          <p id="interval-help" class="hint">Time between snapshots. Edit the interval for a custom setting.</p>
+          <p id="interval-help" class="hint">Seconds between snapshots. Edit for a custom interval.</p>
           <details class="setting-help"><summary>Preset guidance</summary><p id="preset-help" class="hint"></p><p class="hint">Presets change only the interval. Night presets do not change the camera’s exposure or image quality.</p></details>
         </section>
         <section class="form-section" aria-labelledby="schedule-title">
@@ -84,7 +84,7 @@
         <section class="form-section" aria-labelledby="video-title">
           <h3 id="video-title">Finished video</h3>
           <label>Playback frame rate<select name="fps" aria-describedby="fps-help"><option value="24">24 FPS · slower playback</option><option value="30" selected>30 FPS · recommended</option><option value="60">60 FPS · faster playback</option></select></label>
-          <p id="fps-help" class="hint">Frames per second in the finished MP4. This does not need to match your camera’s FPS.</p>
+          <p id="fps-help" class="hint">FPS is for the finished MP4; it does not need to match your camera.</p>
           <details class="setting-help"><summary>How playback speed works</summary><p class="hint">Each snapshot becomes one video frame. Higher FPS plays the same snapshots faster and makes a shorter video. It does not capture more images or change resolution.</p></details>
           <div class="estimate-panel"><span class="estimate-label">Estimated output</span><p id="estimate" aria-live="polite"></p><span class="hint">1080p MP4 · Missed captures shorten the video.</span></div>
         </section>

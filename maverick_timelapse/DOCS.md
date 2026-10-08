@@ -4,7 +4,7 @@ Version 0.1.4 and later download prebuilt containers from GitHub Container Regis
 
 Use **Open Web UI**, then select **New timelapse**. Choose an existing Home Assistant camera, a snapshot interval, and a duration. Select **Start now** (the default) or **Schedule for later**, then press **Start recording** or **Schedule recording**. Scheduled recordings use separate date and time controls; your browser’s timezone is shown below them.
 
-The library shows recordings and finished videos, with **All**, **In progress**, and **Videos** filters. Expand **Recording details** for timing and capture errors. The setup dialog is centered on desktop and fills the screen on phones, and the interface follows your device's light/dark appearance.
+The library shows recordings and finished videos, with **All**, **In progress**, and **Videos** filters. Expand **Recording details** for timing and capture errors. The centered setup dialog uses two columns on desktop and fills the screen on phones, and the interface follows your device's light/dark appearance.
 
 The app automatically authenticates through Home Assistant Supervisor. No camera passwords or access tokens are needed in its configuration.
 
