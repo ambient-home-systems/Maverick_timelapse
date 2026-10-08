@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6
+
+- Center the New timelapse dialog on desktop and widen it from 460px to 640px.
+- Keep the full-screen phone layout and scrollable settings with fixed action buttons.
+
 ## 0.1.5
 
 - Redesign the interface with Material-style controls, a compact toolbar, and automatic light/dark appearance.

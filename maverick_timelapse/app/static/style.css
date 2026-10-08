@@ -131,7 +131,7 @@ meter::-moz-meter-bar { background: var(--primary); }
 dialog { color: var(--text); background: var(--surface); border: none; padding: 0; box-shadow: var(--shadow); }
 dialog::backdrop { background: #0005; }
 .dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
-.composer { width: 460px; height: calc(100dvh - 32px); max-width: calc(100vw - 32px); max-height: none; margin: 16px 16px 16px auto; border-radius: 16px; }
+.composer { width: 640px; height: min(900px, calc(100dvh - 48px)); max-width: calc(100vw - 48px); max-height: none; margin: auto; border-radius: 16px; }
 .composer[open] { display: flex; flex-direction: column; }
 #job-form { display: flex; flex-direction: column; min-height: 0; flex: 1; }
 .form-body { overflow-y: auto; overscroll-behavior: contain; padding: 0 24px; flex: 1; scrollbar-gutter: stable; }
