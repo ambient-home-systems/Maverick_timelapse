@@ -55,6 +55,7 @@ class ConfigurationTests(unittest.TestCase):
         dockerfile = (ROOT / "maverick_timelapse/Dockerfile").read_text()
         self.assertEqual(repository["url"], config["url"])
         self.assertEqual(set(config["arch"]), {"amd64", "aarch64"})
+        self.assertEqual(config["image"], "ghcr.io/ambient-home-systems/maverick_timelapse")
         self.assertIn('io.hass.type="app"', dockerfile)
         self.assertIn('ARG BUILD_VERSION=' + config["version"], dockerfile)
         self.assertIn('FROM python:3.12-slim-bookworm@sha256:', dockerfile)

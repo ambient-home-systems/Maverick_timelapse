@@ -10,7 +10,7 @@ Create timelapse videos from cameras already integrated into Home Assistant. Cho
 
 1. Click the button above and confirm adding this repository in Home Assistant.
 2. Open **Settings → Apps → App store** (older versions: **Settings → Add-ons → Add-on store**), refresh/check for updates if needed, and find **Maverick Timelapse**.
-3. Install the app. The first installation builds its container locally and can take several minutes.
+3. Install the app. Home Assistant downloads the prebuilt container for your system; it does not install Python dependencies or FFmpeg locally. Downloading and extracting layers can still take a little time.
 4. Review its configuration, start it, and select **Open Web UI**. Enable **Show in sidebar** for quick access.
 
 If the button does not work, open the store’s **Repositories** menu and add:
@@ -100,6 +100,7 @@ Battery cameras may sleep or provide images less often than the requested interv
 
 ## Troubleshooting
 
+- **An update pauses at 0%:** version 0.1.4 and later download prebuilt images from GitHub Container Registry. Home Assistant may hold the progress indicator while downloading/extracting layers; check **Settings → System → Logs → Supervisor** for activity or an actual error. Earlier versions built the container locally, which took longer.
 - **No cameras:** add a camera integration in Home Assistant, check its entity, then select **Refresh cameras**.
 - **HTTP 401/403:** check the app log and Home Assistant API access. The app normally receives authentication automatically from Supervisor; do not enter Reolink credentials or a Home Assistant token in app options.
 - **Unavailable camera or repeated timeouts:** check the camera in Home Assistant and try a longer interval.
@@ -133,7 +134,7 @@ PYTHONPATH=maverick_timelapse .venv/bin/python -m uvicorn app.main:app --host 12
 
 Development mode allows loopback requests. Bind to `127.0.0.1`; keep development mode disabled in Home Assistant. The `/health` route checks the scheduler and returns HTTP 200 when ready. Open the local interface to check camera discovery and capture; health alone does not establish camera compatibility.
 
-The automated tests exercise the Home Assistant HTTP adapter, capture failures, restart recovery, storage limits, ingress restrictions, and actual FFmpeg rendering. GitHub Actions also builds the app image for both supported architectures. Tagged releases publish tested images to GitHub Container Registry; see [container releases](docs/container-releases.md) for publication and the switch to prebuilt downloads. Testing on a real Home Assistant OS system and your Reolink models remains necessary before treating the release as production-ready.
+The automated tests exercise the Home Assistant HTTP adapter, capture failures, restart recovery, storage limits, ingress restrictions, and actual FFmpeg rendering. GitHub Actions builds and checks images on native runners for both supported architectures. Tagged releases publish versioned images and a combined manifest to GitHub Container Registry. Home Assistant uses those public prebuilt images; see [container releases](docs/container-releases.md) for the publication process. Testing on a real Home Assistant OS system and your Reolink models remains necessary before treating the release as production-ready.
 
 ## License
 

@@ -2,7 +2,7 @@
 
 GitHub Actions builds Maverick on native **amd64** and **arm64** runners and publishes images to **GitHub Container Registry (GHCR)**. The Home Assistant `aarch64` architecture uses the `arm64` image. There is no Docker Hub account or extra registry token to configure: publication uses the workflow's built-in `GITHUB_TOKEN`, with `packages: write` restricted to publishing jobs.
 
-The release workflow runs app tests first, builds both images, checks their version/architecture labels, and renders a small H.264 video inside each published container. Only after both checks pass does it publish the combined version manifest:
+The release workflow runs app tests first, builds both images, checks their version/architecture labels, and renders a small H.264 video inside each published container. Only after both checks pass does it publish the combined version manifest. Version 0.1.4 is publicly available and `config.yaml` is configured to download it:
 
 ```text
 ghcr.io/ambient-home-systems/maverick_timelapse:0.1.4
@@ -21,7 +21,7 @@ Home Assistant uses the exact `config.yaml` version as the image tag. It does no
    image: ghcr.io/ambient-home-systems/maverick_timelapse
    ```
 
-Keep the `image` setting absent until the published version is publicly downloadable. Otherwise Home Assistant installs/updates can fail because it cannot pull a private or missing image. This initial transition preserves local builds while publication is being completed.
+For a new fork or registry target, keep the `image` setting absent until the published version is publicly downloadable. Otherwise Home Assistant installs/updates can fail because it cannot pull a private or missing image. Maverick's initial publication passed this check before enabling the setting.
 
 Existing installations need no reinstall. Once the repository advertises the prebuilt image, refresh the app store and update Maverick. The existing `/data` directory, jobs, options, and videos remain in place. Downloads and extraction can still pause at 0% briefly; they no longer involve installing Python dependencies or FFmpeg on the Home Assistant host.
 

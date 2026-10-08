@@ -3,6 +3,7 @@
 ## 0.1.4
 
 - Build and publish versioned amd64/aarch64 container images in GitHub Actions, with native architecture checks and a combined manifest.
+- Use publicly downloadable prebuilt images for Home Assistant installs and updates.
 - Cache dependency layers and keep version labels after dependency installation.
 - Check anonymous registry access before switching Home Assistant to prebuilt images.
 
