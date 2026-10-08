@@ -61,7 +61,7 @@ class ConfigurationTests(unittest.TestCase):
         self.assertTrue(config["homeassistant_api"])
         self.assertTrue(config["ingress"])
         self.assertNotIn("ports", config)
-        self.assertIn("redirect/supervisor_addon_repository/", (ROOT / "README.md").read_text())
+        self.assertIn("redirect/supervisor_add_addon_repository/", (ROOT / "README.md").read_text())
 
     def test_invalid_and_naive_schedules_are_rejected(self):
         for change in ({"camera": "../../private"}, {"interval_seconds": 0},

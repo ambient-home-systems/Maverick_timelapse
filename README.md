@@ -4,7 +4,7 @@ Create timelapse videos from cameras already integrated into Home Assistant. Cho
 
 **For Home Assistant OS.** This repository is a custom app repository (formerly called an add-on repository). Version 0.1.0 is an initial release; test a short recording on your camera before scheduling a long one.
 
-[![Click here to add to Home Assistant](https://img.shields.io/badge/Click%20here%20to%20add%20to-Home%20Assistant-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/supervisor_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fambient-home-systems%2FMaverick_timelapse)
+[![Click here to add to Home Assistant](https://img.shields.io/badge/Click%20here%20to%20add%20to-Home%20Assistant-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fambient-home-systems%2FMaverick_timelapse)
 
 ## Install
 
