@@ -12,7 +12,7 @@ RUN --mount=type=secret,id=build_ca \
     pip install --no-cache-dir --disable-pip-version-check -r requirements.txt
 COPY app ./app
 
-ARG BUILD_VERSION=0.1.6
+ARG BUILD_VERSION=0.1.7
 ARG BUILD_ARCH=amd64
 LABEL io.hass.version="${BUILD_VERSION}" \
     io.hass.type="app" \

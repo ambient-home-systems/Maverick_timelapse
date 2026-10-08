@@ -27,7 +27,7 @@ Existing installations need no reinstall. Once the repository advertises the pre
 
 ## Subsequent releases
 
-1. Prepare a release branch with the next version in `config.yaml`, the Dockerfile's default `BUILD_VERSION`, and the interface version badge. Update the changelog and README examples.
+1. Prepare a release branch with the next version in `config.yaml`, the Dockerfile's default `BUILD_VERSION`, and `app/version.py` (which controls the interface version badge and asset URLs). Update the changelog and README examples.
 2. Push the branch and its matching `vX.Y.Z` tag. The workflow rejects a tag that does not match `config.yaml`. Keep `main` advertising the previous published version while the new images build.
 3. Wait for **Publish app images** to pass, including the anonymous check. Then merge the tested release into `main` so Home Assistant discovers it.
 

@@ -19,6 +19,7 @@ from app.camera import HomeAssistant
 from app.engine import Engine, capture_error, write_frame
 from app.main import create_app
 from app.models import JobCreate
+from app.version import APP_VERSION
 
 ROOT = Path(__file__).resolve().parents[1]
 HEADERS = {"X-Maverick-Request": "1"}
@@ -55,6 +56,7 @@ class ConfigurationTests(unittest.TestCase):
         dockerfile = (ROOT / "maverick_timelapse/Dockerfile").read_text()
         self.assertEqual(repository["url"], config["url"])
         self.assertEqual(set(config["arch"]), {"amd64", "aarch64"})
+        self.assertEqual(config["version"], APP_VERSION)
         self.assertEqual(config["image"], "ghcr.io/ambient-home-systems/maverick_timelapse")
         self.assertIn('io.hass.type="app"', dockerfile)
         self.assertIn('ARG BUILD_VERSION=' + config["version"], dockerfile)
@@ -337,10 +339,33 @@ class APITests(unittest.IsolatedAsyncioTestCase):
     async def test_index_cameras_health_and_storage(self):
         index = await self.client.get("/")
         self.assertEqual(index.status_code, 200)
-        self.assertIn("./static/app.js", index.text)
+        self.assertIn(f"./static/{APP_VERSION}/app.js", index.text)
         self.assertEqual((await self.client.get("/health")).json(), {"ready": True})
         self.assertEqual((await self.client.get("/api/cameras")).json()[0]["entity_id"], "camera.garden")
         self.assertEqual((await self.client.get("/api/status")).json()["limit_bytes"], 10 * 1024**3)
+
+    async def test_interface_and_module_assets_do_not_reuse_old_cache_urls(self):
+        index = await self.client.get("/", headers={"If-None-Match": '"old-interface"'})
+        self.assertEqual(index.status_code, 200)
+        self.assertEqual(index.headers["cache-control"], "no-store")
+        self.assertIn(f"./static/{APP_VERSION}/style.css", index.text)
+        self.assertIn(f"Version {APP_VERSION}", index.text)
+        self.assertNotIn("__APP_VERSION__", index.text)
+        for asset in ["style.css", "app.js", "schedule.mjs", "presets.mjs"]:
+            response = await self.client.get(f"/static/{APP_VERSION}/{asset}")
+            self.assertEqual(response.status_code, 200, asset)
+            self.assertEqual(response.headers["cache-control"], "no-store", asset)
+        script = (await self.client.get(f"/static/{APP_VERSION}/app.js")).text
+        self.assertIn('from "./schedule.mjs"', script)
+        self.assertIn('from "./presets.mjs"', script)
+
+    async def test_previously_open_interfaces_can_still_resolve_assets(self):
+        response = await self.client.get("/static/style.css")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["cache-control"], "no-store")
+        conditional = await self.client.get("/static/style.css", headers={"If-None-Match": response.headers["etag"]})
+        self.assertEqual(conditional.status_code, 304)
+        self.assertEqual(conditional.headers["cache-control"], "no-store")
 
     async def test_create_list_finish_delete_and_validation(self):
         payload = {"name": "Garden", "camera": "camera.garden",

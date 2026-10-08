@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+- Use release-specific URLs for styles, JavaScript, and imported modules so cached assets from earlier versions do not retain the old dialog layout.
+- Disable caching for the interface document and assets, and derive the displayed version from the app release.
+- Keep asset routes available for previously opened interfaces.
+
 ## 0.1.6
 
 - Center the New timelapse dialog on desktop and widen it from 460px to 640px.

@@ -8,12 +8,13 @@ from pathlib import Path
 
 import httpx
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .camera import HomeAssistant
 from .engine import Engine, storage_bytes
 from .models import JobCreate
+from .version import APP_VERSION
 
 STATIC = Path(__file__).parent / "static"
 LOGGER = logging.getLogger(__name__)
@@ -22,6 +23,7 @@ LOGGER = logging.getLogger(__name__)
 def create_app(data_dir: Path | None = None, camera=None, development: bool | None = None) -> FastAPI:
     data = data_dir or Path(os.environ.get("MAVERICK_DATA_DIR", "/data"))
     dev = development if development is not None else os.environ.get("MAVERICK_DEV") == "1"
+    index_html = (STATIC / "index.html").read_text().replace("__APP_VERSION__", APP_VERSION)
 
     @asynccontextmanager
     async def lifespan(application: FastAPI):
@@ -58,7 +60,7 @@ def create_app(data_dir: Path | None = None, camera=None, development: bool | No
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "same-origin"
         response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self'; media-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'"
-        if request.url.path.startswith("/api/"):
+        if request.url.path == "/" or request.url.path.startswith(("/api/", "/static/")):
             response.headers["Cache-Control"] = "no-store"
         return response
 
@@ -83,7 +85,7 @@ def create_app(data_dir: Path | None = None, camera=None, development: bool | No
 
     @application.get("/")
     async def index():
-        return FileResponse(STATIC / "index.html")
+        return HTMLResponse(index_html)
 
     @application.get("/api/cameras")
     async def cameras():
@@ -144,6 +146,10 @@ def create_app(data_dir: Path | None = None, camera=None, development: bool | No
         return FileResponse(path, media_type="video/mp4",
                             filename=f"maverick-{job.id}.mp4" if download else None)
 
+    # Relative module imports inherit this release directory, so CSS, JS, and
+    # imported modules all get new URLs when the installed version changes.
+    application.mount(f"/static/{APP_VERSION}", StaticFiles(directory=STATIC), name="release_static")
+    # Allow already-open pages from earlier releases to keep resolving assets.
     application.mount("/static", StaticFiles(directory=STATIC), name="static")
     return application
 
