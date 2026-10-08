@@ -102,7 +102,7 @@ Battery cameras may sleep or provide images less often than the requested interv
 
 ## Troubleshooting
 
-- **The interface still looks like an older release after updating:** reload the Home Assistant browser page and reopen Maverick. On desktop, use a hard refresh (Ctrl+Shift+R, or Command+Shift+R on Mac). Check the version shown in Maverick’s toolbar against the installed app version. Starting with 0.1.7, each release uses new CSS/JavaScript URLs and disables interface caching.
+- **The interface still looks like an older release after updating:** reload the Home Assistant browser page and reopen Maverick. For Chrome/Firefox, use Ctrl+Shift+R (Command+Shift+R on Mac); for Safari on Mac, use Option+Command+R. Check the version shown in Maverick’s toolbar against the installed app version. Starting with 0.1.7, each release uses new CSS/JavaScript URLs and disables interface caching.
 - **An update pauses at 0%:** version 0.1.4 and later download prebuilt images from GitHub Container Registry. Home Assistant may hold the progress indicator while downloading/extracting layers; check **Settings → System → Logs → Supervisor** for activity or an actual error. Earlier versions built the container locally, which took longer.
 - **No cameras:** add a camera integration in Home Assistant, check its entity, then select **Refresh cameras**.
 - **HTTP 401/403:** check the app log and Home Assistant API access. The app normally receives authentication automatically from Supervisor; do not enter Reolink credentials or a Home Assistant token in app options.
